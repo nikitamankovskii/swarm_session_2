@@ -44,7 +44,7 @@ to setup-turtles
 end
 
 to setup-levy-flight-py
-  print (word "setting up levy-flight alg. - lmax="world-width)
+  ;print (word "setting up levy-flight alg. - lmax="world-width)
   py:set "lmax" world-width
   py:set "lstep" world-width / 100
 
@@ -88,7 +88,9 @@ end
 to go
   if count turtles = 0 [ stop ]
   if count patches with [pcolor = red] = 0 [ stop ]
+  ;ifelse firefly-optimization
   check_light_around_simple
+    ;[ right random 360 ]
   move-turtles
   update-intensity
   check-patch
@@ -98,8 +100,10 @@ end
 
 to check_light_around_simple
   ask turtles [
-    pd
-    ;; print color
+
+    ifelse show-path
+      [ pd ]
+      [ pu ]
     let this_turtle who
     let tmp_destination_turtle who
     let tmp_destination_light -1
@@ -117,19 +121,23 @@ to check_light_around_simple
      ]
     set destination_turtle tmp_destination_turtle
     set destination_light tmp_destination_light
-    ifelse destination_turtle != -1
+    ifelse labels
+    [
+      ifelse destination_turtle != -1
       [
         set label (word who":"light-intensity"/"destination_turtle":"destination_light)
       ]
       [
         set label (word who":"light-intensity"/ No target")
       ]
+    ]
+    [ set label "" ]
   ]
 end
 
 to move-turtles
   ask turtles [
-    ifelse destination_turtle != -1
+    ifelse ( destination_turtle != -1 and firefly-optimization )
     [
       go-to-destination_turtule who
     ]
@@ -142,7 +150,10 @@ end
 to go-to-destination_turtule [turtle_number]
   ask turtle turtle_number [
     set heading towards turtle destination_turtle
-    make-levy-flight-step who
+    ifelse levy-flight
+       [ make-levy-flight-step who ]
+       [ fd 1 ]
+
     ;; fd (random distance turtle destination_turtle) / 2;; may be changed
   ]
 end
@@ -154,7 +165,9 @@ to secure-random-move [turtle_number]
       ifelse pcolor != 33
       [
         ask turtle turtle_number [
-          make-levy-flight-step who
+          ifelse levy-flight
+            [ make-levy-flight-step who]
+            [ fd 1 ]
         ]
       ]
       [ secure-random-move turtle_number ]
@@ -255,10 +268,10 @@ NIL
 1
 
 BUTTON
-569
-11
-632
-44
+538
+10
+601
+43
 NIL
 go
 T
@@ -272,9 +285,9 @@ NIL
 0
 
 MONITOR
-657
+608
 10
-762
+713
 55
 Targets found
 count patches with [pcolor = green]
@@ -283,10 +296,10 @@ count patches with [pcolor = green]
 11
 
 MONITOR
-657
-67
-788
-112
+716
+10
+837
+55
 Targets not found
 count patches with [pcolor = red]
 17
@@ -294,10 +307,10 @@ count patches with [pcolor = red]
 11
 
 INPUTBOX
-463
-124
-549
-184
+649
+73
+735
+133
 number_turtles
 20.0
 1
@@ -305,10 +318,10 @@ number_turtles
 Number
 
 INPUTBOX
-560
-54
-647
-114
+558
+72
+645
+132
 number_target_patches
 50.0
 1
@@ -316,10 +329,10 @@ number_target_patches
 Number
 
 INPUTBOX
-463
-54
-556
-114
+461
+72
+554
+132
 number_wall_patches
 0.0
 1
@@ -327,10 +340,10 @@ number_wall_patches
 Number
 
 SLIDER
-465
-201
-654
-234
+461
+237
+650
+270
 light-sensor-range
 light-sensor-range
 1
@@ -342,10 +355,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-466
-243
-660
-276
+461
+275
+655
+308
 additional-intensity
 additional-intensity
 0
@@ -355,6 +368,50 @@ additional-intensity
 1
 NIL
 HORIZONTAL
+
+SWITCH
+460
+148
+584
+181
+levy-flight
+levy-flight
+1
+1
+-1000
+
+SWITCH
+591
+148
+777
+181
+firefly-optimization
+firefly-optimization
+0
+1
+-1000
+
+SWITCH
+460
+186
+592
+219
+show-path
+show-path
+0
+1
+-1000
+
+SWITCH
+599
+186
+702
+219
+labels
+labels
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
