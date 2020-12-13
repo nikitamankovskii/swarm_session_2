@@ -87,7 +87,7 @@ end
 
 to go
   if count turtles = 0 [ stop ]
-  if count patches with [pcolor = red] = 0 [ stop ]
+  if count patches with [pcolor = red] = 0 and  != 0 [ stop ]
   check_light_around_simple
   move-turtles
   update-intensity
@@ -112,6 +112,7 @@ to check_light_around_simple
         set tmp_destination_light light-intensity
       ]
       [
+        ; print "No one in range."
         set tmp_destination_turtle -1
         set tmp_destination_light -1
       ]

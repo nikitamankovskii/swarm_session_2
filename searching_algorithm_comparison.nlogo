@@ -87,7 +87,7 @@ end
 
 to go
   if count turtles = 0 [ stop ]
-  if count patches with [pcolor = red] = 0 [ stop ]
+  if count patches with [pcolor = red] = 0 and number_target_patches != 0 [ stop ]
   check_light_around_simple
   move-turtles
   update-intensity
@@ -319,7 +319,7 @@ INPUTBOX
 645
 132
 number_target_patches
-50.0
+0.0
 1
 0
 Number
