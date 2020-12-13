@@ -88,9 +88,7 @@ end
 to go
   if count turtles = 0 [ stop ]
   if count patches with [pcolor = red] = 0 [ stop ]
-  ;ifelse firefly-optimization
   check_light_around_simple
-    ;[ right random 360 ]
   move-turtles
   update-intensity
   check-patch
@@ -114,7 +112,7 @@ to check_light_around_simple
         set tmp_destination_light light-intensity
       ]
       [
-        print "No one in range."
+        ; print "No one in range."
         set tmp_destination_turtle -1
         set tmp_destination_light -1
       ]
@@ -153,8 +151,6 @@ to go-to-destination_turtule [turtle_number]
     ifelse levy-flight
        [ make-levy-flight-step who ]
        [ fd 1 ]
-
-    ;; fd (random distance turtle destination_turtle) / 2;; may be changed
   ]
 end
 
@@ -185,8 +181,8 @@ end
 to-report get-x-py [value]
   py:set "i" value
   let step py:runresult "x[ numpy.abs(numpy.subtract.outer(y, i/100 )).argmin(0) ]"
-  show "from py"
-  show step
+  ; show "from py"
+  ; show step
   report step
 end
 
